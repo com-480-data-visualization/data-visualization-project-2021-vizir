@@ -3,8 +3,8 @@
 | Student's name | SCIPER |
 | -------------- | ------ |
 | Florian Singer | |
-| Alessandro Tempia | |
-| Alexandre Hutter | 251978 |
+| Alessandro Tempia Calvino | 321743 |
+| Alexandre Hutter          | 251978 |
 
 [Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3)
 
