@@ -28,7 +28,7 @@ This project aims to show the evolution of music, genre, and taste through time 
 ## Exploratory Data Analysis
 Data preprocessing and statistics are available in the **[notebook](../exploratory_data_analysis.ipynb)**.
 
-As you can see in the notebook, the dataset is quite clean. For the artists, there is only some missing data in the followers field as well as the genre which is sometimes empty. For the tracks, some names are missing but only a handful so they could be discarded without losing too much data.
+As it can be seen in the notebook, the artists' and tracks' datasets don't contain that much missing data. Only few entries such as the number of followers and the genre are missing for a few artists. Moreover, the name of less than a hundred of tracks is not available. Therefore, we could discard them without impacting significantly on the results.
 
 An important information in both of our datasets is the popularity. This is a metric computed by a secret algorithm developed at Spotify which gives a ranking to songs (and by extension to artists). It seems to be related to the number of plays of a given song and how fast it reached this number of plays. It ranges from 0 to 100 and allows us to have a concrete way of ranking tracks and identifying (current) top hits. It is important to note that this value changes over time and represent the popularity as of today.
 
