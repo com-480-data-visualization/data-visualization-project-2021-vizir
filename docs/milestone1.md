@@ -5,7 +5,7 @@
 The dataset is composed by around 600 thousands music tracks and 1 million artists present on Spotify which published songs between 1922 and 2021.
 In particular, the tracks data contains:
 - Song and artists
-- Publishing details: duration, genres, release date, key, tempo, etc.
+- Publish details: duration, genres, release date, key, tempo, etc.
 - Followers and popularity
 - Statistics: danceability, energy, loudness, etc.
 
@@ -17,7 +17,7 @@ The artists dataset contains generally few missing values and it is relatively c
 
 ## Problematic
 
-Clearly, the music has evolved in the years starting from genres, popularity, and danceability. Using this dataset, we have the opportunity to tell a story that shows the evolution of music through time covering a whole century of history. Some visualization ideas that we have are:
+Clearly, music has evolved in the years in terms of trending genres, popularity, and danceability. Using this dataset, we have the opportunity to tell a story that shows the evolution of music through time covering a whole century of history. Some visualization ideas that we have are:
 - Artists that made the history of the music over the years
 - Evolution of the most popular genres and tracks over the years
 - Exploit statistics to link songs and time (e.g. danceability, energy)
@@ -32,7 +32,7 @@ As you can see in the notebook, the dataset is quite clean. For the artists, the
 
 An important information in both of our datasets is the popularity. This is a metric computed by a secret algorithm developed at Spotify which gives a ranking to songs (and by extension to artists). It seems to be related to the number of plays of a given song and how fast it reached this number of plays. It ranges from 0 to 100 and allows us to have a concrete way of ranking tracks and identifying (current) top hits. It is important to note that this value changes over time and represent the popularity as of today.
 
-Using this information, here are some basic statistics on the data : 
+Using this information, here are some basic statistics on the data :
 - Rock is the most popular genre (represented by 576 artists) and there are 370 niche genre that are represented by a single artist only.
 - The most popular artist is Justin Bieber (popularity of 100) but the one with the most followers is Ed Sheeran (popularity of 92).
 - Unsurprisingly, the most popular song is "Peaches" by Justin Bieber (featuring Daniel Caesar and Giveon) which was released less than a month ago. This indicates that the dataset is regularly maintained up-to-date.
@@ -40,7 +40,7 @@ Using this information, here are some basic statistics on the data :
 You can take a look at the notebook for more detailed statistics and graphs.
 
 ## Related Work
-Multiple visualizations have already been proposed in the musical field. We take inspiration from the following ones:
+Multiple visualizations have already been proposed in the music field. We take inspiration from the following ones:
 - **[History of rock](https://svds.com/rockandroll/)** shows rock song statistics and influences among bands
 - **[The evolution of popular music](https://ibruins.weebly.com/visualizations.html)** shows the evolution of genres and records per year from around 1980 to 2010
 - **[The Billboard](https://pudding.cool/2017/03/music-history/)** shows through time the top 5 trending songs while reproducing the best track
