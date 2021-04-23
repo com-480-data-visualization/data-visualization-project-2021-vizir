@@ -34,5 +34,6 @@ Multiple visualizations have already been proposed in the musical field. We take
 - **[History of rock](https://svds.com/rockandroll/)** shows rock song statistics and influences among bands
 - **[The evolution of popular music](https://ibruins.weebly.com/visualizations.html)** shows the evolution of genres and records per year from around 1980 to 2010
 - **[The Billboard](https://pudding.cool/2017/03/music-history/)** shows through time the top 5 trending songs while reproducing the best track
+- **[Are Pop Lyrics Getting More Repetitive?](https://pudding.cool/2017/05/song-repetition/)** studies the repetitiveness of songs through several decades. It compares a measure of repetitiveness by song, by artist, or by year, using bar charts, plots and bubble charts. This can be an inspiration for visualizing the danceability, energy, etc.
 
-Our idea is to do a deeper analysis over the last century that combines trending songs, generes, and statistics. Furthermore, we plan to add interactive charts and filters by genre to better exploit the available data.
+Our idea is to do a deeper analysis over the last century that combines trending songs, genres, and statistics. Furthermore, we plan to add interactive charts and filters by genre to better exploit the available data.
