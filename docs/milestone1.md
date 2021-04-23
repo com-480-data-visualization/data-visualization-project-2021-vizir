@@ -28,6 +28,16 @@ This project aims to show the evolution of music, genre, and taste through time 
 ## Exploratory Data Analysis
 Data preprocessing and statistics are available in the **[notebook](../exploratory_data_analysis.ipynb)**.
 
+As you can see in the notebook, the dataset is quite clean. For the artists, there is only some missing data in the followers field as well as the genre which is sometimes empty. For the tracks, some names are missing but only a handful so they could be discarded without losing too much data.
+
+An important information in both of our datasets is the popularity. This is a metric computed by a secret algorithm developed at Spotify which gives a ranking to songs (and by extension to artists). It seems to be related to the number of plays of a given song and how fast it reached this number of plays. It ranges from 0 to 100 and allows us to have a concrete way of ranking tracks and identifying (current) top hits. It is important to note that this value changes over time and represent the popularity as of today.
+
+Using this information, here are some basic statistics on the data : 
+- Rock is the most popular genre (represented by 576 artists) and there are 370 niche genre that are represented by a single artist only.
+- The most popular artist is Justin Bieber (popularity of 100) but the one with the most followers is Ed Sheeran (popularity of 92).
+- Unsurprisingly, the most popular song is "Peaches" by Justin Bieber (featuring Daniel Caesar and Giveon) which was released less than a month ago. This indicates that the dataset is regularly maintained up-to-date.
+
+You can take a look at the notebook for more detailed statistics and graphs.
 
 ## Related Work
 Multiple visualizations have already been proposed in the musical field. We take inspiration from the following ones:
