@@ -36,6 +36,7 @@ Using this information, here are some basic statistics on the data :
 - Rock is the most popular genre (represented by 576 artists) and there are 370 niche genre that are represented by a single artist only.
 - The most popular artist is Justin Bieber (popularity of 100) but the one with the most followers is Ed Sheeran (popularity of 92).
 - Unsurprisingly, the most popular song is "Peaches" by Justin Bieber (featuring Daniel Caesar and Giveon) which was released less than a month ago. This indicates that the dataset is regularly maintained up-to-date.
+- We can observe a small positive correlation between the popularity of songs and their "energy" and "loudness". On the other hand, there is also a negative correlation between the popularity and the accousticness of songs. Both of these results have logical interpretations.
 
 You can take a look at the notebook for more detailed statistics and graphs.
 
