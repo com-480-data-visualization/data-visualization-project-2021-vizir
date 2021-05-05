@@ -8,6 +8,8 @@
 
 [Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3)
 
+The website is available at [https://com-480-data-visualization.github.io/data-visualization-project-2021-vizir/](https://com-480-data-visualization.github.io/data-visualization-project-2021-vizir/).
+
 ## Milestone 1 (23rd April, 5pm)
 
 **10% of the final grade**
