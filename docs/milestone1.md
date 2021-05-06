@@ -26,7 +26,7 @@ Clearly, music has evolved in the years in terms of trending genres, popularity,
 This project aims to show the evolution of music, genre, and taste through time while suggesting the best songs and artist for each category in a simple interactive visualization manner. Consequently, the target audience is broad: from audiophiles to sporadic music listeners.
 
 ## Exploratory Data Analysis
-Data preprocessing and statistics are available in the **[notebook](../exploratory_data_analysis.ipynb)**.
+Data preprocessing and statistics are available in the **[notebook](../notebooks/exploratory_data_analysis.ipynb)**.
 
 As it can be seen in the notebook, the artists' and tracks' datasets don't contain that much missing data. Only few entries such as the number of followers and the genre are missing for a few artists. Moreover, the name of less than a hundred of tracks is not available. Therefore, we could discard them without impacting significantly on the results.
 
