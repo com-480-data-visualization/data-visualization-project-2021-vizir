@@ -1,11 +1,11 @@
 # Data
-/data
-data/
-Data/
-Project1/data/
-Project1/Data/
-Project2/data/
-Project2/Data/
+artists.csv
+data_by_artist_o.csv
+data_by_genres_o.csv
+data_by_year_o.csv
+data_o.csv
+dict_artists.json
+tracks.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
