@@ -46,7 +46,45 @@
 
 <!-- Part 3 -->
 <div class="container-fluid bg-green text-center" id="viz3">
-  <h3 class="margin">Viz 3</h3>
+  <h3 class="margin">Audio Features of Genres per Year</h3>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <img src="img/audio_features_example.png" />
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-12">
+      <form id="featureForm" class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-secondary active">
+          <input type="radio" name="featureSelect" value="danceability" checked>Danceability
+        </label>
+        <label class="btn btn-secondary">
+          <input type="radio" name="featureSelect" value="energy">Energy
+        </label>
+        <label class="btn btn-secondary">
+          <input type="radio" name="featureSelect" value="speechiness">Speechiness
+        </label>
+      </form>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-12">
+      <form id="genreForm" class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-secondary active">
+          <input type="checkbox" name="genreSelect" value="all" checked>All
+        </label>
+        <label class="btn btn-secondary active">
+          <input type="checkbox" name="genreSelect" value="rock" checked>Rock
+        </label>
+        <label class="btn btn-secondary">
+          <input type="checkbox" name="genreSelect" value="jazz">Jazz
+        </label>
+      </form>
+    </div>
+  </div>
 </div>
 
 
@@ -59,7 +97,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 <!-- Custom JS scripts -->
-<script src="js/script.js"></script>
+
 
 </body>
 </html>
