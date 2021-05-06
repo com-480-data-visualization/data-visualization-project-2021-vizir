@@ -49,3 +49,24 @@ nav a {
 nav a:hover {
   color: #1abc9c !important;
 }
+
+g.popularity path.chart {
+  fill: #1abc9c;
+  stroke: #6f6a6a;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #aaa;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  fill-opacity: .125;
+}
+
+.instructions {
+  font-size: 16px;
+  font-family: sans-serif;
+  fill: #6f6a6a;
+}
