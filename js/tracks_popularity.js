@@ -253,4 +253,4 @@ class Chart {
   }
 }
 
-d3.csv( 'data/most_popular_songs_by_year.csv', create_chart );
+d3.json( "data/most_popular_songs_by_year.json", create_chart );
