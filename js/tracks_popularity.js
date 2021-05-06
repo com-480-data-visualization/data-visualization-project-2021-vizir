@@ -107,8 +107,8 @@ function create_chart( data ){
     .attr("class", "x brush")
     .call(brush)
     .selectAll("rect")
-    .attr("y", 30)
-    .attr("height", contextHeight);
+    .attr("y", 5)
+    .attr("height", contextHeight + 20);
 
   context.append("text")
     .attr("class", "instructions")
