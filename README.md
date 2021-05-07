@@ -46,7 +46,7 @@ Content:
 
 **10% of the final grade**
 
-**[Milestone 2 Report](docs/milestone2.md)**
+**[Milestone 2 Report](docs/milestone2.pdf)**
 
 ## Milestone 3 (4th June, 5pm)
 
