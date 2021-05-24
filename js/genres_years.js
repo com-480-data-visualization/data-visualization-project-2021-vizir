@@ -15,7 +15,6 @@ function create_chart(data) {
     let starting_genres = ["latin", "classical"]
 
     starting_data = filter_genres(data, starting_genres)
-    console.log(starting_data)
     starting_data = get_percentage(starting_data)
 
     var max = 0
@@ -27,7 +26,6 @@ function create_chart(data) {
             if(value > max) max = value;
         }
     }
-    console.log(max)
 
     // years/decades scale
     x = d3.scaleBand()
@@ -45,8 +43,8 @@ function create_chart(data) {
                   .range(d3.schemeCategory10.concat(["#a8327f", "#a89e32", "#3283a8", "#a83232"]));
 
     var stackedData = d3.stack().keys(starting_genres)(starting_data)
-    console.log(stackedData)
-
+    
+    // CHART
     var curr_genre = ""
 
     bars = svg1.append("g")
@@ -106,6 +104,7 @@ function create_chart(data) {
     toggle_div =  d3.select("#toggle_viz1")
                     .attr("class", "ms-auto")
 
+    // Add classes for the colors    
     genres.forEach(g => {
         var style = document.createElement('style');
             style.type = 'text/css';
@@ -129,7 +128,6 @@ function create_chart(data) {
                    .attr("value", function(d) { return d; })
                    .attr("checked", function(d) {
                        if(starting_genres.includes(d)) {
-                           console.log("activated")
                            return "checked" 
                        } else {
                            return null
@@ -151,10 +149,8 @@ function create_chart(data) {
 
             let new_data = filter_genres(data, new_genres)
             new_data = get_percentage(new_data)
-            console.log(new_data)
 
             let new_stacked_data = d3.stack().keys(new_genres)(new_data)
-            console.log(new_stacked_data[0])
 
             svg1.selectAll("rect")
                 .transition().duration(1000)
