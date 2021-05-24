@@ -70,3 +70,15 @@ g.popularity path.chart {
   font-family: sans-serif;
   fill: #6f6a6a;
 }
+
+.axisWhite line {
+  stroke: white;
+}
+
+.axisWhite path {
+  stroke: white;
+}
+
+.axisWhite text {
+  fill: white;
+}
