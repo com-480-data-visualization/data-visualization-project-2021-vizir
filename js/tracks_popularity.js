@@ -45,14 +45,14 @@ function create_chart( data ){
   let chartHeight = 1;
 
   // groups for category
-  var groups = ["Popularity", "Danceability", "Energy", "Valence", "Speechiness", "Instrumentalness", "Liveness"]
+  var groups = ["Popularity", "Danceability", "Energy", "Valence", "Acousticness", "Instrumentalness", "Liveness"]
 
   var group_color = {
     Popularity: "#1abc9c",
     Danceability: "#DE9B88",
     Energy: "#EEC519",
     Valence: "#d9534f",
-    Speechiness: "#585A51",
+    Acousticness: "#585A51",
     Instrumentalness: "#5bc0de",
     Liveness: "#95ABD4"
   }

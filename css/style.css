@@ -34,7 +34,8 @@ p {
 
 #selectButton {
   color: #555555;
-  position: relative;
+  /* position: relative; */
+  margin: 0 auto;
 }
 
 .navbar {
