@@ -44,6 +44,42 @@ function create_chart( data ){
 	// let chartHeight = height * (1 / count);
   let chartHeight = 1;
 
+  // groups for category
+  var groups = ["Popularity", "Danceability", "Energy", "Valence", "Speechiness", "Instrumentalness", "Liveness"]
+
+  var group_color = {
+    Popularity: "#1abc9c",
+    Danceability: "#DE9B88",
+    Energy: "#EEC519",
+    Valence: "#d9534f",
+    Speechiness: "#585A51",
+    Instrumentalness: "#5bc0de",
+    Liveness: "#95ABD4"
+  }
+
+  var genres = [];
+
+  data.map(d => {
+    for (let prop in d) {
+      if (d.hasOwnProperty(prop) && prop == 'genres') {
+        // if ( genres.find( (v) => { v === d[prop].toLowerCase().replace(/\s+/g, ''); }) != true ) {
+          genres.push(d[prop]);
+        // }
+      }
+    }
+  })
+
+  console.log( genres )
+
+  d3.select("#selectButton")
+      .selectAll('myOptions')
+     	.data(groups)
+      .enter()
+    	.append('option')
+      .text(function (d) { return d; })
+      .attr("value", function (d) { return d; })
+
+
 	data.map(d => {
     for (let prop in d) {
       if (d.hasOwnProperty(prop) && prop == 'popularity') {
@@ -66,8 +102,19 @@ function create_chart( data ){
     minDataPoint: minDataPoint,
     svg: svg,
     margin: margin,
-    showBottomAxis: true
+    showBottomAxis: true,
+    groups: groups,
+    group_color: group_color,
+    genres: genres
   }));
+
+  // When the button is changed, run the updateChart function
+  d3.select("#selectButton").on("change", function(d) {
+      // recover the option that has been chosen
+      var selectedOption = d3.select(this).property("value")
+      // run the updateChart function with this selected option
+      charts[0].update(selectedOption);
+  })
 
 	// Create a context for a brush
 	var contextXScale = d3.scaleTime()
@@ -86,6 +133,7 @@ function create_chart( data ){
 		.y0(contextHeight-20)
 		.y1(0)
 		.curve(d3.curveBasis);
+
 
 	var brush = d3.brushX()
 		.extent([
@@ -134,6 +182,10 @@ class Chart {
     this.name = options.name;
     this.margin = options.margin;
     this.showBottomAxis = options.showBottomAxis;
+    this.groups = options.groups;
+    this.group_color = options.group_color;
+    this.genres = options.genres;
+    this.num_data = this.chartData.length;
 
     let localName = this.name;
 
@@ -151,11 +203,13 @@ class Chart {
     let xS = this.xScale;
     let yS = this.yScale;
 
-    /*
-        Create the chart.
-        Here we use 'curveLinear' interpolation.
-        Play with the other ones: 'curveBasis', 'curveCardinal', 'curveStepBefore'.
-        */
+    this.genre_color = d3.scaleOrdinal()
+      .domain(this.genres)
+      .range(d3.schemeSet2);
+
+    let gColor = this.genre_color;
+
+
     this.area = d3.area()
       .x(function(d) {
         return xS(d.release_date);
@@ -175,7 +229,8 @@ class Chart {
       .data([this.chartData])
       .attr("class", "chart")
       .attr("clip-path", "url(#clip-" + this.id + ")")
-      .attr("d", this.area);
+      .attr("d", this.area)
+      .attr("fill", this.group_color["Popularity"]);
 
       // Three function that change the tooltip when user hover / move / leave a cell
       let mouseover = function(d) {
@@ -188,7 +243,7 @@ class Chart {
       }
       let mousemove = function(d) {
         Tooltip
-          .html("<p>" + d.name + "<br>" + d.artists + "</p>")
+          .html("<p><strong>" + d.name + "</strong><br>" + d.artists + "</p>")
           .style("left",  (d3.event.pageX-90) + "px")
           .style("top",  (d3.event.pageY+15) + "px")
       }
@@ -202,6 +257,38 @@ class Chart {
           .duration(500)
           .attr('stroke-width', 0);
       }
+
+      let genre_mouseover = function(d) {
+        Tooltip
+          .style("opacity", 1);
+      }
+      let genre_mousemove = function(d) {
+        Tooltip
+          .html("<p><strong>" + d.genres + "</strong></p>")
+          .style("left",  (d3.event.pageX-90) + "px")
+          .style("top",  (d3.event.pageY+15) + "px")
+      }
+      let genre_mouseleave = function(d) {
+        Tooltip
+          .style("opacity", 0)
+          .style("left",  0 + "px")
+          .style("top",  0 + "px");
+      }
+
+    let margin_rect = this.width/this.num_data/2;
+
+    this.chartContainer.selectAll("rect")
+      .data(this.chartData)
+      .enter()
+      .append("rect")
+      .attr("width", this.width/this.num_data)
+      .attr("height", 7)
+      .attr("x", function(d) { return xS(d.release_date) - margin_rect} )
+      .attr("y", -10)
+      .attr("fill",  function(d){ return gColor(d.genres); })
+      .on('mouseover', genre_mouseover)
+      .on('mousemove', genre_mousemove)
+      .on('mouseleave', genre_mouseleave);
 
     this.chartContainer.selectAll("dot")
       .data(this.chartData)
@@ -242,14 +329,65 @@ class Chart {
       .call(this.yAxisRight);
   }
 
+  update(selectedGroup) {
+    let xS = this.xScale;
+    let yS = this.yScale;
+    // Create new data with the selection?
+    let area = d3.area()
+      .x(function(d) {
+        return xS(d.release_date);
+      })
+      .y0(this.height)
+      .y1(function(d) {
+        return yS(d[selectedGroup.toLowerCase()]);
+      })
+      .curve(d3.curveCatmullRom);
+
+    this.area = area;
+
+
+    this.chartContainer.select("path")
+      .data([this.chartData])
+      .transition()
+      .duration(1000)
+      .attr("d", area)
+      .attr("fill", this.group_color[selectedGroup]);
+
+    this.chartContainer.selectAll("circle")
+      .data(this.chartData)
+      .transition()
+      .duration(1000)
+      .attr("cy", function(d) { return yS(d[selectedGroup.toLowerCase()]); })
+  }
+
   showOnly(b) {
     this.xScale.domain(b);
+
+    let years_domain = b.map( (v) => {return v.getFullYear();} );
+    let years = years_domain[1] - years_domain[0];
+    if ( years <= 0 ) {
+      years = 1;
+    }
+
+    let margin_rect = this.width/years/2;
+
+    // let width_comp = this.width + margin_rect * 2;
     let xS = this.xScale;
     this.chartContainer.select("path").data([this.chartData]).attr("d", this.area);
     this.chartContainer.select(".x.axis.bottom").call(this.xAxisBottom);
     this.chartContainer.selectAll("circle")
       .data(this.chartData)
-      .attr("cx", function(d) { return xS(d.release_date); })
+      .attr("cx", function(d) { return xS(d.release_date); });
+    this.chartContainer.selectAll("rect")
+      .data(this.chartData)
+      .attr("x", function(d) {
+        // if ( xS(d.release_date) - margin_rect > 0 )
+          return xS(d.release_date) - margin_rect;
+        // else
+          // return 0;
+      })
+      .attr("width", margin_rect * 2);
+
   }
 }
 
