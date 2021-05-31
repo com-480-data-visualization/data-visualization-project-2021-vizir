@@ -261,6 +261,9 @@ class Chart {
       let genre_mouseover = function(d) {
         Tooltip
           .style("opacity", 1);
+        d3.select(this).style("fill", function() {
+          return d3.rgb(d3.select(this).style("fill")).darker(0.3);
+        });
       }
       let genre_mousemove = function(d) {
         Tooltip
@@ -273,6 +276,11 @@ class Chart {
           .style("opacity", 0)
           .style("left",  0 + "px")
           .style("top",  0 + "px");
+        d3.select(this)
+          .classed("hover", true);
+        d3.select(this).style("fill", function() {
+          return d3.rgb(d3.select(this).style("fill")).brighter(0.3);
+        });
       }
 
     let margin_rect = this.width/this.num_data/2;
