@@ -205,7 +205,7 @@ class Chart {
 
     this.genre_color = d3.scaleOrdinal()
       .domain(this.genres)
-      .range(d3.schemeSet2);
+      .range(d3.schemeCategory20);
 
     let gColor = this.genre_color;
 
