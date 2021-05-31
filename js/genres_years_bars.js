@@ -215,10 +215,15 @@ function get_percentage(data) {
 
     for(i = 0; i < data.length; ++i) {
         // Get max
-        var sum = 1
+        var sum = 0
         genres.forEach(g => {
             sum += data[i][g];
         });
+
+        // Set sum to 1 if sum == 0 to ensure no division by 0
+        if(sum === 0) { 
+            sum = 1;
+        };
 
         //divide per max to get percentage
         genres.forEach(g => {
