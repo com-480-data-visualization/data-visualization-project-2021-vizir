@@ -17,13 +17,13 @@ function createAudioChart(data) {
   //const genres = Object.keys(data);
   //const features = Object.keys(data.all);
 
-  const width = audioFeaturesRoot.clientWidth * 0.8;
-  const height = audioFeaturesRoot.clientHeight * 0.6;
+  const width = audioFeaturesRoot.offsetWidth * 0.7 - 100;
+  const height = audioFeaturesRoot.offsetHeight * 0.6;
   const margin = {
-    top: 10,
-    right: 40,
+    top: 20,
+    right: 50,
     bottom: 150,
-    left: 60
+    left: 50
   };
   const minDataPoint = 0;
   const maxDataPoint = 100;
