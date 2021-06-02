@@ -11,7 +11,7 @@ const margin = {
   contextHeight = 30;
   contextWidth = width;
 
-const info_description = "<p><strong> Statistics on Tracks<br>" +
+const info_description = "<p><strong>Statistics<br>" +
                         "Popularity:</strong> measures the current popularity of a track<br>" +
                         "<strong>Danceability:</strong> describes how suitable a track is for dancing " +
                         "based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity<br>" +
@@ -80,7 +80,7 @@ function create_chart( data ){
     Valence: "#d9534f",
     Acousticness: "#CCCCFF",
     Instrumentalness: "#5bc0de",
-    Liveness: "#3878F0"
+    Liveness: "#AF7AC5"
   }
 
   var genres = [];
