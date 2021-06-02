@@ -20,7 +20,7 @@ const info_description = "<p><strong>Statistics<br>" +
                         "<strong>Energy:</strong> represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy<br>" +
                         "<strong>Valence:</strong> describes the musical positiveness conveyed by a track<br>" +
                         "<strong>Acousticness:</strong> measures if a track is acoustic<br>" +
-                        "<strong>Instrumentalness:</strong> measures the probablility that a track does not contain vocals<br>" +
+                        "<strong>Instrumentalness:</strong> measures the probability that a track does not contain vocals<br>" +
                         "<strong>Liveness:</strong> detects the presence of an audience in the recording, live performance<br>" +
                         "</p>";
 
