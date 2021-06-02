@@ -1,6 +1,5 @@
 const chartDiv = document.getElementById("viz2");
 
-//const MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
 const margin = {
     top: 10,
     right: 50,
@@ -12,24 +11,50 @@ const margin = {
   contextHeight = 30;
   contextWidth = width;
 
+const info_description = "<p><strong> Statistics on Tracks<br>" +
+                        "Popularity:</strong> measures the current popularity of a track<br>" +
+                        "<strong>Danceability:</strong> describes how suitable a track is for dancing " +
+                        "based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity<br>" +
+                        "<strong>Energy:</strong> represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy<br>" +
+                        "<strong>Valence:</strong> describes the musical positiveness conveyed by a track<br>" +
+                        "<strong>Acousticness:</strong> measures if a track is acoustic<br>" +
+                        "<strong>Instrumentalness:</strong> measures the probablility that a track does not contain vocals<br>" +
+                        "<strong>Liveness:</strong> detects the presence of an audience in the recording, live performance<br>" +
+                        "</p>";
+
 const svg = d3.select("#viz2").append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", (height + margin.top + margin.bottom));
 
-  // create a tooltip
+// create a tooltip
 const Tooltip = d3.select("#viz2")
-  .append("div")
-  .style("opacity", 0)
-  .attr("class", "tooltip")
-  .style("background-color", "white")
-  .style("border", "solid")
-  .style("border-width", "2px")
-  .style("text-align", "center")
-  .style("width", "200px")
-  // .style("heigth", "15px")
-  .style("border-radius", "3px")
-  .style("padding", "2px")
-  .style("position", "absolute");
+                  .append("div")
+                  .style("opacity", 0)
+                  .attr("class", "tooltip")
+                  .style("background-color", "white")
+                  .style("border", "solid")
+                  .style("border-width", "2px")
+                  .style("text-align", "center")
+                  .style("width", "200px")
+                  // .style("heigth", "15px")
+                  .style("border-radius", "3px")
+                  .style("padding", "2px")
+                  .style("position", "absolute");
+
+// create a tooltip for info
+const TooltipInfo = d3.select("#viz2")
+                      .append("div")
+                      .style("opacity", 0)
+                      .attr("class", "tooltip")
+                      .style("background-color", "white")
+                      .style("border", "solid")
+                      .style("border-width", "2px")
+                      .style("text-align", "center")
+                      .style("width", "500px")
+                      // .style("heigth", "15px")
+                      .style("border-radius", "3px")
+                      .style("padding", "2px")
+                      .style("position", "absolute");
 
 
 function create_chart( data ){
@@ -47,6 +72,7 @@ function create_chart( data ){
   // groups for category
   var groups = ["Popularity", "Danceability", "Energy", "Valence", "Acousticness", "Instrumentalness", "Liveness"]
 
+  // colors for categrories
   var group_color = {
     Popularity: "#1abc9c",
     Danceability: "#DE9B88",
@@ -59,6 +85,7 @@ function create_chart( data ){
 
   var genres = [];
 
+  // get all genres in the data
   data.map(d => {
     for (let prop in d) {
       if (d.hasOwnProperty(prop) && prop == 'genres') {
@@ -71,6 +98,7 @@ function create_chart( data ){
 
   console.log( genres )
 
+  // add categories to select button
   d3.select("#selectButton")
       .selectAll('myOptions')
      	.data(groups)
@@ -78,6 +106,31 @@ function create_chart( data ){
     	.append('option')
       .text(function (d) { return d; })
       .attr("value", function (d) { return d; })
+
+
+  // create tooltip for info
+  let info_mouseover = function() {
+    TooltipInfo
+      .style("opacity", 1);
+  }
+  let info_mousemove = function() {
+    TooltipInfo
+      .html(info_description)
+      .style("left",  (d3.event.pageX-90) + "px")
+      .style("top",  (d3.event.pageY+15) + "px")
+  }
+  let info_mouseleave = function() {
+    TooltipInfo
+      .style("opacity", 0)
+      .style("left",  0 + "px")
+      .style("top",  0 + "px");
+  }
+
+  // add info to info circle icon
+  d3.select("#info_circle")
+    .on('mouseover', info_mouseover)
+    .on('mousemove', info_mousemove)
+    .on('mouseleave', info_mouseleave);
 
 
 	data.map(d => {
@@ -92,6 +145,7 @@ function create_chart( data ){
     d.release_date = new Date(d.release_date, 0, 1);
   });
 
+  // create a chart
   charts.push(new Chart({
     data: data.slice(),
     id: 0,
@@ -108,7 +162,7 @@ function create_chart( data ){
     genres: genres
   }));
 
-  // When the button is changed, run the updateChart function
+  // when the button is changed, run the updateChart function
   d3.select("#selectButton").on("change", function(d) {
       // recover the option that has been chosen
       var selectedOption = d3.select(this).property("value")
@@ -116,7 +170,7 @@ function create_chart( data ){
       charts[0].update(selectedOption);
   })
 
-	// Create a context for a brush
+	// create a context for a brush
 	var contextXScale = d3.scaleTime()
 		.range([0, contextWidth])
 		.domain(charts[0].xScale.domain())
@@ -163,7 +217,7 @@ function create_chart( data ){
     .attr("transform", "translate(0," + (contextHeight + 80) + ")")
     .text('Click and drag above to zoom / pan the data');
 
-  // Brush handler. Get time-range from a brush and pass it to the charts.
+  // brush handler. Get time-range from a brush and pass it to the charts.
   function onBrush() {
     var b = d3.event.selection === null ? contextXScale.domain() : d3.event.selection.map(contextXScale.invert);
     charts[0].showOnly(b);
@@ -196,20 +250,21 @@ class Chart {
         return d.release_date;
       })));
 
-    // Bound yScale using minDataPoint and maxDataPoint
+    // bound yScale using minDataPoint and maxDataPoint
     this.yScale = d3.scaleLinear()
       .range([0, this.height])
       .domain([this.minDataPoint, this.maxDataPoint]);
     let xS = this.xScale;
     let yS = this.yScale;
 
+    // get a color scale for genres
     this.genre_color = d3.scaleOrdinal()
       .domain(this.genres)
       .range(d3.schemeCategory20);
 
     let gColor = this.genre_color;
 
-
+    // create D3 area
     this.area = d3.area()
       .x(function(d) {
         return xS(d.release_date);
@@ -220,7 +275,7 @@ class Chart {
       })
       .curve(d3.curveCatmullRom);
 
-    // Add the chart to the HTML page
+    // add the chart to the HTML page
     this.chartContainer = svg.append("g")
       .attr('class', "popularity")
       .attr("transform", "translate(" + this.margin.left + "," + (this.margin.top + (this.height * this.id) + (10 * this.id)) + ")");
@@ -232,59 +287,62 @@ class Chart {
       .attr("d", this.area)
       .attr("fill", this.group_color["Popularity"]);
 
-      // Three function that change the tooltip when user hover / move / leave a cell
-      let mouseover = function(d) {
-        Tooltip
-          .style("opacity", 1);
-        d3.select(this)
-      	  .transition()
-      	  .duration(500)
-      	  .attr('stroke-width', 12);
-      }
-      let mousemove = function(d) {
-        Tooltip
-          .html("<p><strong>" + d.name + "</strong><br>" + d.artists + "</p>")
-          .style("left",  (d3.event.pageX-90) + "px")
-          .style("top",  (d3.event.pageY+15) + "px")
-      }
-      let mouseleave = function(d) {
-        Tooltip
-          .style("opacity", 0)
-          .style("left",  0 + "px")
-          .style("top",  0 + "px");
-        d3.select(this)
-          .transition()
-          .duration(500)
-          .attr('stroke-width', 0);
-      }
+    // three functions that change the tooltip when user hover / move / leave a data element
+    let mouseover = function(d) {
+      Tooltip
+        .style("opacity", 1);
+      d3.select(this)
+    	  .transition()
+    	  .duration(500)
+    	  .attr('stroke-width', 12);
+    }
+    let mousemove = function(d) {
+      Tooltip
+        .html("<p><strong>" + d.name + "</strong><br>" + d.artists + "</p>")
+        .style("left",  (d3.event.pageX-90) + "px")
+        .style("top",  (d3.event.pageY+15) + "px")
+    }
+    let mouseleave = function(d) {
+      Tooltip
+        .style("opacity", 0)
+        .style("left",  0 + "px")
+        .style("top",  0 + "px");
+      d3.select(this)
+        .transition()
+        .duration(500)
+        .attr('stroke-width', 0);
+    }
 
-      let genre_mouseover = function(d) {
-        Tooltip
-          .style("opacity", 1);
-        d3.select(this).style("fill", function() {
-          return d3.rgb(d3.select(this).style("fill")).darker(0.3);
-        });
-      }
-      let genre_mousemove = function(d) {
-        Tooltip
-          .html("<p><strong>" + d.genres + "</strong></p>")
-          .style("left",  (d3.event.pageX-90) + "px")
-          .style("top",  (d3.event.pageY+15) + "px")
-      }
-      let genre_mouseleave = function(d) {
-        Tooltip
-          .style("opacity", 0)
-          .style("left",  0 + "px")
-          .style("top",  0 + "px");
-        d3.select(this)
-          .classed("hover", true);
-        d3.select(this).style("fill", function() {
-          return d3.rgb(d3.select(this).style("fill")).brighter(0.3);
-        });
-      }
+    // three functions that change the tooltip when user hover / move / leave a genre element
+    let genre_mouseover = function(d) {
+      Tooltip
+        .style("opacity", 1);
+      d3.select(this).style("fill", function() {
+        return d3.rgb(d3.select(this).style("fill")).darker(0.3);
+      });
+    }
+    let genre_mousemove = function(d) {
+      Tooltip
+        .html("<p><strong>" + d.genres + "</strong></p>")
+        .style("left",  (d3.event.pageX-90) + "px")
+        .style("top",  (d3.event.pageY+15) + "px")
+    }
+    let genre_mouseleave = function(d) {
+      Tooltip
+        .style("opacity", 0)
+        .style("left",  0 + "px")
+        .style("top",  0 + "px");
+      d3.select(this)
+        .classed("hover", true);
+      d3.select(this).style("fill", function() {
+        return d3.rgb(d3.select(this).style("fill")).brighter(0.3);
+      });
+    }
 
+    // initialization of the genres rectangle sizes
     let margin_rect = this.width/this.num_data/2;
 
+    // create rectangles for genres
     this.chartContainer.selectAll("rect")
       .data(this.chartData)
       .enter()
@@ -298,6 +356,7 @@ class Chart {
       .on('mousemove', genre_mousemove)
       .on('mouseleave', genre_mouseleave);
 
+    // create circles for data points in chart path
     this.chartContainer.selectAll("dot")
       .data(this.chartData)
       .enter()
@@ -338,8 +397,10 @@ class Chart {
   }
 
   update(selectedGroup) {
+    // change chart plot based on the selected group
     let xS = this.xScale;
     let yS = this.yScale;
+
     // Create new data with the selection?
     let area = d3.area()
       .x(function(d) {
@@ -352,7 +413,6 @@ class Chart {
       .curve(d3.curveCatmullRom);
 
     this.area = area;
-
 
     this.chartContainer.select("path")
       .data([this.chartData])
@@ -369,18 +429,20 @@ class Chart {
   }
 
   showOnly(b) {
+    // update on brush
     this.xScale.domain(b);
 
+    // compute rectangle sizes
     let years_domain = b.map( (v) => {return v.getFullYear();} );
     let years = years_domain[1] - years_domain[0];
     if ( years <= 0 ) {
       years = 1;
     }
-
     let margin_rect = this.width/years/2;
 
-    // let width_comp = this.width + margin_rect * 2;
     let xS = this.xScale;
+
+    // resize
     this.chartContainer.select("path").data([this.chartData]).attr("d", this.area);
     this.chartContainer.select(".x.axis.bottom").call(this.xAxisBottom);
     this.chartContainer.selectAll("circle")
@@ -389,14 +451,11 @@ class Chart {
     this.chartContainer.selectAll("rect")
       .data(this.chartData)
       .attr("x", function(d) {
-        // if ( xS(d.release_date) - margin_rect > 0 )
           return xS(d.release_date) - margin_rect;
-        // else
-          // return 0;
       })
       .attr("width", margin_rect * 2);
-
   }
 }
 
+// read data
 d3.json( "data/most_popular_songs_by_year.json", create_chart );

@@ -48,6 +48,15 @@ p {
   letter-spacing: 5px;
 }
 
+#info_circle {
+  color: #1780b8;
+  pointer-events: all;
+}
+
+#info_circle:hover {
+  color: #1760b8;
+}
+
 nav a {
   color: #ffffff;
 }
