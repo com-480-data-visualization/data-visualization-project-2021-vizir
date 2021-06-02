@@ -27,14 +27,16 @@ function createAudioChart(data) {
   };
   const minDataPoint = 0;
   const maxDataPoint = 100;
+  const contextHeight = 30;
+  const contextWidth = width;
 
   const svg = d3.select("#viz3").append("svg")
     .attr("class", "my-5")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom);
 
-  //let charts = [];
-  let chart = new AudioChart({
+  let charts = [];
+  charts.push(new AudioChart({
     data: data,
     id: 0,
     // name: "",
@@ -48,7 +50,60 @@ function createAudioChart(data) {
     // groups: groups,
     // group_color: group_color,
     // genres: genres
-  });
+  }));
+
+  // create a context for a brush
+	const contextXScale = d3.scaleTime()
+		.range([0, contextWidth])
+		.domain(charts[0].xScale.domain())
+
+	const contextAxis = d3.axisBottom(contextXScale)
+    .ticks(20)
+		.tickSize(contextHeight + 30)
+		.tickPadding(5);
+
+	const contextArea = d3.area()
+		.x(function(d) {
+			return contextXScale(d.date);
+		})
+		.y0(contextHeight-20)
+		.y1(0)
+		.curve(d3.curveBasis);
+
+
+	const brush = d3.brushX()
+		.extent([
+			[contextXScale.range()[0], 5],
+			[contextXScale.range()[1], contextHeight + 25]
+		])
+		.on("brush", onBrush);
+
+  const context = svg.append("g")
+    .attr("class", "context")
+    .attr("transform", "translate(" + (margin.left) + "," + (height + margin.top + 30) + ")");
+
+  context.append("g")
+    .attr("class", "x axis top")
+    .attr("transform", "translate(0,0)")
+    .call(contextAxis)
+
+  context.append("g")
+    .attr("class", "x brush")
+    .call(brush)
+    .selectAll("rect")
+    .attr("y", 5)
+    .attr("height", contextHeight + 20);
+
+  context.append("text")
+    .attr("class", "instructions")
+    .attr("transform", "translate(0," + (contextHeight + 80) + ")")
+    .text('Click and drag above to zoom / pan the data');
+
+  // brush handler. Get time-range from a brush and pass it to the charts.
+  function onBrush() {
+    var b = d3.event.selection === null ? contextXScale.domain() : d3.event.selection.map(contextXScale.invert);
+    charts[0].showOnly(b);
+  }
 
 }
 
@@ -105,26 +160,33 @@ class AudioChart {
       .attr("fill", "none")
       .attr("stroke", "black")
       .attr("stroke-width", 2)
-      //.attr("class", "chart")
+      .attr("class", "chart")
       .attr("d", this.line);
 
     // Add x axis
-    this.xAxis = d3.axisBottom(xS);
+    this.xAxisBottom = d3.axisBottom(xS);
     this.chartContainer.append("g")
-        //.attr("class", "x axis")
+        .attr("class", "x axis bottom")
         .attr("transform", "translate(0," + this.height + ")")
-        .call(this.xAxis);
+        .call(this.xAxisBottom);
 
     // Add y axis
     this.yAxisLeft = d3.axisLeft(this.yScale).ticks(10);
     this.yAxisRight = d3.axisRight(this.yScale).ticks(10);
     this.chartContainer.append("g")
-      //.attr("class", "y axis")
+      .attr("class", "y axis left")
       .call(this.yAxisLeft);
     this.chartContainer.append("g")
-      //.attr("class", "y axis")
+      .attr("class", "y axis right")
       .attr("transform", "translate(" + this.width + ",0)")
       .call(this.yAxisRight);
 
   }
+
+  showOnly(b) {
+    this.xScale.domain(b);
+    this.chartContainer.select("path").data([this.chartData]).attr("d", this.line);
+    this.chartContainer.select(".x.axis.bottom").call(this.xAxisBottom);
+  }
+
 }
