@@ -1,13 +1,13 @@
 const chartDiv = document.getElementById("viz1");
 
 const margin = {
-    top: 10,
+    top: 20,
     right: 50,
     bottom: 150,
     left: 50
   },
-  width = chartDiv.clientWidth * 0.8,
-  height = chartDiv.clientHeight * 0.5,
+  width = chartDiv.offsetWidth * 0.8 * 0.85,
+  height = chartDiv.offsetHeight * 0.45,
   contextHeight = 30;
   contextWidth = width;
 
@@ -348,9 +348,9 @@ class Chart {
       .enter()
       .append("rect")
       .attr("width", this.width/this.num_data)
-      .attr("height", 7)
+      .attr("height", 8)
       .attr("x", function(d) { return xS(d.release_date) - margin_rect} )
-      .attr("y", -10)
+      .attr("y", -15)
       .attr("fill",  function(d){ return gColor(d.genres); })
       .on('mouseover', genre_mouseover)
       .on('mousemove', genre_mousemove)
