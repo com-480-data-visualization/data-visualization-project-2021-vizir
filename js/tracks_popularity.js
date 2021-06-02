@@ -78,9 +78,9 @@ function create_chart( data ){
     Danceability: "#DE9B88",
     Energy: "#EEC519",
     Valence: "#d9534f",
-    Acousticness: "#585A51",
+    Acousticness: "#CCCCFF",
     Instrumentalness: "#5bc0de",
-    Liveness: "#95ABD4"
+    Liveness: "#3878F0"
   }
 
   var genres = [];

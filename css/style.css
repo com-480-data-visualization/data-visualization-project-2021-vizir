@@ -12,6 +12,11 @@ p {
   margin-bottom: 45px;
 }
 
+.paragraph {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 .bg-green {
   background-color: #1abc9c; /* Green */
   color: #ffffff;
@@ -49,12 +54,12 @@ p {
 }
 
 #info_circle {
-  color: #1780b8;
+  color: #1E90FF;
   pointer-events: all;
 }
 
 #info_circle:hover {
-  color: #1760b8;
+  color: #1E70FF;
 }
 
 nav a {
