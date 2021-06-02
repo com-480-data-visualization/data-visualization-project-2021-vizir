@@ -294,7 +294,7 @@ class Chart {
       d3.select(this)
     	  .transition()
     	  .duration(500)
-    	  .attr('stroke-width', 12);
+    	  .attr("r", 7);
     }
     let mousemove = function(d) {
       Tooltip
@@ -310,7 +310,7 @@ class Chart {
       d3.select(this)
         .transition()
         .duration(500)
-        .attr('stroke-width', 0);
+        .attr("r", 2.5);
     }
 
     // three functions that change the tooltip when user hover / move / leave a genre element
@@ -348,9 +348,9 @@ class Chart {
       .enter()
       .append("rect")
       .attr("width", this.width/this.num_data)
-      .attr("height", 8)
+      .attr("height", 7)
       .attr("x", function(d) { return xS(d.release_date) - margin_rect} )
-      .attr("y", -15)
+      .attr("y", -20)
       .attr("fill",  function(d){ return gColor(d.genres); })
       .on('mouseover', genre_mouseover)
       .on('mousemove', genre_mousemove)
@@ -366,7 +366,7 @@ class Chart {
       .attr("cy", function(d) { return yS(d.popularity); })
       .attr('fill', function (d) { return d.fill })
       .attr('stroke','black')
-      .attr('stroke-width',0)
+      .attr('stroke-width',1)
       .on('mouseover', mouseover)
       .on('mousemove', mousemove)
       .on('mouseleave', mouseleave);
