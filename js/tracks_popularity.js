@@ -6,10 +6,12 @@ const margin = {
     bottom: 150,
     left: 50
   },
-  width = chartDiv.offsetWidth * 0.8 * 0.85,
+  width = chartDiv.offsetWidth * 0.7 - 100,
   height = chartDiv.offsetHeight * 0.45,
   contextHeight = 30;
   contextWidth = width;
+
+const rect_height = height * 0.035;
 
 const info_description = "<p><strong>Statistics<br>" +
                         "Popularity:</strong> measures the current popularity of a track<br>" +
@@ -348,7 +350,7 @@ class Chart {
       .enter()
       .append("rect")
       .attr("width", this.width/this.num_data)
-      .attr("height", 7)
+      .attr("height", rect_height)
       .attr("x", function(d) { return xS(d.release_date) - margin_rect} )
       .attr("y", -20)
       .attr("fill",  function(d){ return gColor(d.genres); })
