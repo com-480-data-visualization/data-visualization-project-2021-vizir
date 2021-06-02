@@ -1,8 +1,14 @@
-var svg1 = d3.select("#viz1")
+let chartDiv2 = document.getElementById("viz2");
+let toggleDiv2 = document.getElementById("toggle_viz2");
+
+let width2 = chartDiv2.offsetWidth * 0.9;
+let height2 = chartDiv2.offsetHeight * 0.85;
+
+var svg1 = d3.select("#viz2")
              .append("svg")
-             .attr("class", "my-5")
-             .attr("width", "85%")
-             .attr("height", "1050");
+             .attr("class", "mt-5")
+             .attr("width", width2)
+             .attr("height", height2*1.2);
             
 let GENRES_COLORS = ["#961c0a", "#2b5688", "#991c45", "#4f35cd","#056e70",
                      "#824475", "#1c4a06", "#98065b", "#71470f", "#14675a",
@@ -30,12 +36,12 @@ function create_chart(data) {
     // years/decades scale
     x = d3.scaleBand()
             .domain(years)
-            .range([0,  1000])
+            .range([0,  width2])
             
     // popularity scale
     y = d3.scaleLinear()
                .domain([0, 100]) // 100 since using percentage
-               .range([1000, 0])
+               .range([height2, 0])
 
     // Color palette
     var color = d3.scaleOrdinal()
@@ -59,7 +65,7 @@ function create_chart(data) {
         .enter().append("rect")
         .attr("class", function(d) {return "bar-"+curr_genre.replace( /\s/g, '')})
         .attr("x", function(d) { return x(d.data.year) + 0.1*x.bandwidth(); })
-        .attr("y", 1000)
+        .attr("y", height2)
         .attr("width", x.bandwidth()*0.8)
         .attr("height", 0)
 
@@ -77,8 +83,9 @@ function create_chart(data) {
         });
 
     // AXES
+    let axis_height = height2 + 20;
     svg1.append("g")
-        .attr("transform", "translate(0," + 1020 + ")")
+        .attr("transform", "translate(0," + axis_height + ")")
         .attr("class", "axisWhite")
         .call(d3.axisBottom(x));
 
@@ -101,8 +108,8 @@ function create_chart(data) {
             .attr("font-weight", "bold");
 
     // TOGGLE
-    toggle_div =  d3.select("#toggle_viz1")
-                    .attr("class", "ms-auto")
+    toggle_div =  d3.select("#toggle_viz2")
+                    
 
     // Add classes for the colors    
     genres.forEach(g => {
@@ -116,10 +123,10 @@ function create_chart(data) {
                    .data(genres) //reverse to have the same order as displayed on the viz
                    .enter()
                    .append("div")
-                   .attr("class", "btn-group-toggle text-left")
+                   .attr("class", "btn-group-toggle mx-5")
                    .attr("data-toggle", "buttons")
                    .append("label")
-                   .attr("class", function(d) { return "btn btn-secondary btn-block focus mb-2" })
+                   .attr("class", function(d) { return "btn btn-secondary btn-block mb-2" })
                    .attr("id", function(d) {return "btn-" + d.replace( /\s/g, '')})
                    .text(function(d) { return d; })
                    .append("input")
@@ -154,7 +161,7 @@ function create_chart(data) {
 
             svg1.selectAll("rect")
                 .transition().duration(1000)
-                .attr("y", 1000)
+                .attr("y", height2)
                 .attr("height", 0)
                 .remove()
                 
@@ -171,7 +178,7 @@ function create_chart(data) {
                         .enter().append("rect")
                         .attr("class", function(d) {return "bar-" + curr_genre.replace( /\s/g, '')})
                         .attr("x", function(d) { return x(d.data.year); })
-                        .attr("y", 1000)
+                        .attr("y", height2)
                         .attr("width", x.bandwidth()*0.8)
                         .attr("height", 0)
         

@@ -1,4 +1,4 @@
-const chartDiv = document.getElementById("viz2");
+const chartDiv = document.getElementById("viz1");
 
 const margin = {
     top: 10,
@@ -22,12 +22,12 @@ const info_description = "<p><strong>Statistics<br>" +
                         "<strong>Liveness:</strong> detects the presence of an audience in the recording, live performance<br>" +
                         "</p>";
 
-const svg = d3.select("#viz2").append("svg")
+const svg = d3.select("#viz1").append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", (height + margin.top + margin.bottom));
 
 // create a tooltip
-const Tooltip = d3.select("#viz2")
+const Tooltip = d3.select("#viz1")
                   .append("div")
                   .style("opacity", 0)
                   .attr("class", "tooltip")
@@ -42,7 +42,7 @@ const Tooltip = d3.select("#viz2")
                   .style("position", "absolute");
 
 // create a tooltip for info
-const TooltipInfo = d3.select("#viz2")
+const TooltipInfo = d3.select("#viz1")
                       .append("div")
                       .style("opacity", 0)
                       .attr("class", "tooltip")

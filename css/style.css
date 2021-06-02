@@ -35,6 +35,8 @@ p {
 .container-fluid {
   padding-top: 70px;
   padding-bottom: 70px;
+  padding-left: 15%;
+  padding-right: 15%;
 }
 
 #selectButton {
@@ -102,3 +104,8 @@ g.popularity path.chart {
 .axisWhite text {
   fill: white;
 }
+
+#viz2 {
+  height: 800px;
+}
+
