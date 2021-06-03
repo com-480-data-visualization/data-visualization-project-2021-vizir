@@ -7,21 +7,27 @@ d3.json(audioFeaturesDataPath, createAudioChart);
 function createAudioChart(data) {
 
   //data = data['all']['danceability']; // TMP
-  data = data['all']; // TMP
-  const features = Object.keys(data); // TMP
+  //data = data['all']; // TMP
+  //const features = Object.keys(data); // TMP
+
+  const features = Object.keys(data);
+  const genres = Object.keys(data[features[0]]);
+  const startingGenres = ['all', 'rock']
+
+  //console.log(features)
+  //console.log(genres)
 
   // Transform data points to a list
-  for (let feature in data) {
-    data[feature] = Object.entries(data[feature]).map(function(d) {
-      return {
-        x: new Date(d[0], 0, 1),  // Transform to Date object
-        y: d[1] * 100  // Map 0-1 to 0-100
-      };
-    })
+  for (let i in data) {
+    for (let j in data[i]) {
+      data[i][j] = Object.entries(data[i][j]).map(function(d) {
+        return {
+          x: new Date(d[0], 0, 1),  // Transform to Date object
+          y: d[1] * 100  // Map 0-1 to 0-100
+        };
+      })
+    }
   }
-
-  //const genres = Object.keys(data);
-  //const features = Object.keys(data.all);
 
   const width = audioFeaturesRoot.offsetWidth * 0.7 - 100;
   const height = audioFeaturesRoot.offsetHeight * 0.6;
@@ -41,7 +47,7 @@ function createAudioChart(data) {
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom);
 
-  // add categories to select button
+  // List for selecting features
   const selectFeature = d3.select("#selectFeature")
   selectFeature.selectAll('myOptions')
    	.data(features)
@@ -57,8 +63,49 @@ function createAudioChart(data) {
       // recover the option that has been chosen
       var selectedOption = d3.select(this).property("value")
       // run the updateChart function with this selected option
-      charts[0].update(selectedOption);
+      charts[0].updateFeature(selectedOption);
   })
+
+  // Buttons for selecting genres
+  toggle =  d3.select("#checkbox-af")
+
+  // Add classes for the colors
+  /*genres.forEach(g => {
+      var style = document.createElement('style');
+          style.type = 'text/css';
+          style.innerHTML = '#btn-' + g.replace( /\s/g, '') + '.active' + ' { background-color: ' + color(g)+ '; }';
+          document.getElementsByTagName('head')[0].appendChild(style);
+  });*/
+
+  toggles = toggle.selectAll("div")
+    .data(genres)
+    .enter()
+    .append("label")
+    .attr("class", function(d) { return "btn btn-secondary col-sm-3" })
+    .attr("id", function(d) {return "btn-af-" + d.replace( /\s/g, '')})
+    .text(function(d) { return d; })
+    .append("input")
+    .attr("type", "checkbox")
+    .attr("name", "checkbox-af")
+    .attr("value", function(d) { return d; })
+    .attr("checked", function(d) {
+      if(startingGenres.includes(d)) {
+        return "checked";
+      } else {
+        return null;
+      }
+    })
+   .attr("id", function(d, i) { return "checkbox-af-" + d.replace( /\s/g, ''); })
+   .on("change", function(d) {
+      const activatedGenres = [];
+      genres.forEach(function(g) {
+        const cb = d3.select("#" + "checkbox-af-" + g.replace( /\s/g, ''));
+        if (cb.property("checked")) {
+					activatedGenres.push(g);
+				}
+      })
+      charts[0].updateGenre(activatedGenres);
+   });
 
   let charts = [];
   charts.push(new AudioChart({
@@ -75,7 +122,9 @@ function createAudioChart(data) {
     // groups: groups,
     // group_color: group_color,
     // genres: genres
-    feature: initialFeature
+    feature: initialFeature,
+    genres: startingGenres,
+    allGenres: genres
   }));
 
   // create a context for a brush
@@ -156,13 +205,16 @@ class AudioChart {
     // this.genres = options.genres;
     // this.num_data = this.chartData.length;
     this.feature = options.feature;
+    this.genres = options.genres;
+    this.allGenres = options.allGenres;
 
     this.chartData = this.allData[this.feature];
+    //this.chartData = this.chartData['all']; //TMP
 
     // Associate xScale with time
     this.xScale = d3.scaleTime()
       .range([0, this.width])
-      .domain(d3.extent(this.chartData.map(function(d) {
+      .domain(d3.extent(this.chartData['all'].map(function(d) {
         return d.x;
       })));
 
@@ -174,27 +226,37 @@ class AudioChart {
     let xS = this.xScale;
     let yS = this.yScale;
 
-    // Create the chart
-    this.line = d3.line()
-      .x(function(d) {
-        return xS(d.x);
-      })
-      .y(function(d) {
-        return yS(d.y);
-      })
-      .curve(d3.curveBasis);
-
     // Add the chart to the HTML page
     this.chartContainer = this.svg.append("g")
       //.attr('class', this.name.toLowerCase())
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-    this.chartContainer.append("path")
-      .data([this.chartData])
-      .attr("fill", "none")
-      .attr("stroke", "black")
-      .attr("stroke-width", 2)
-      .attr("class", "chart")
-      .attr("d", this.line);
+
+    // Create the lines
+    this.lines = [];
+    this.paths = [];
+    for (const genre of this.allGenres) {
+      const line = d3.line()
+        .x(function(d) {
+          return xS(d.x);
+        })
+        .y(function(d) {
+          return yS(d.y);
+        })
+        .curve(d3.curveBasis);
+
+      const opacity = this.genres.includes(genre) ? 1 : 0;
+      const path = this.chartContainer.append("path")
+        .data([this.chartData[genre]])
+        .attr("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", 2)
+        .attr("class", "chart")
+        .attr("d", line)
+        .style("opacity", opacity);
+
+      this.lines.push(line);
+      this.paths.push(path);
+    }
 
     // Add x axis
     this.xAxisBottom = d3.axisBottom(xS);
@@ -218,18 +280,39 @@ class AudioChart {
 
   showOnly(b) {
     this.xScale.domain(b);
-    this.chartContainer.select("path").data([this.chartData]).attr("d", this.line);
+    const that = this;
+    this.allGenres.forEach(function(genre, i) {
+      that.paths[i]
+        .data([that.chartData[genre]])
+        .attr("d", that.lines[i]);
+    });
     this.chartContainer.select(".x.axis.bottom").call(this.xAxisBottom);
   }
 
-  update(selectedGroup) {
+  updateFeature(selectedGroup) {
+    // Change the feature displayed on the chart
     this.feature = selectedGroup;
     this.chartData = this.allData[this.feature];
-    this.chartContainer.select("path")
-      .data([this.chartData])
-      .transition()
-      .duration(1000)
-      .attr("d", this.line);
+    const that = this;
+    this.allGenres.forEach(function(genre, i) {
+      that.paths[i]
+        .data([that.chartData[genre]])
+        .transition()
+        .duration(1000)
+        .attr("d", that.lines[i]);
+    });
+    return
+  }
+
+  updateGenre(activatedGenres) {
+    // Hide and unhide lines according to the activated genres
+    this.genres = activatedGenres;
+    const that = this;
+    this.allGenres.forEach(function(genre, i) {
+      const opacity = activatedGenres.includes(genre) ? 1 : 0;
+      that.paths[i]
+        .style("opacity", opacity);
+    });
   }
 
 }
