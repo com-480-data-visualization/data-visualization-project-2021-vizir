@@ -73,9 +73,9 @@ function createAudioChart(data) {
     .data(genres)
     .enter()
     .append("label")
-    .attr("class", function(d) { return "btn btn-secondary col-sm-2" })
+    .attr("class", function(d) { return "btn btn-secondary col-sm-3" })
     .style("margin", "3px")
-    .attr("id", function(d) {return "btn-af-" + d.replace( /\s/g, '')})
+    .attr("id", function(d) {return "btn-af-" + d.replace( /[\s&]/g, '')})
     .text(function(d) { return d; })
     .append("input")
     .attr("type", "checkbox")
@@ -88,11 +88,11 @@ function createAudioChart(data) {
         return null;
       }
     })
-   .attr("id", function(d, i) { return "checkbox-af-" + d.replace( /\s/g, ''); })
+   .attr("id", function(d, i) { return "checkbox-af-" + d.replace( /[\s&]/g, ''); })
    .on("change", function(d) {
       const activatedGenres = [];
       genres.forEach(function(g) {
-        const cb = d3.select("#" + "checkbox-af-" + g.replace( /\s/g, ''));
+        const cb = d3.select("#" + "checkbox-af-" + g.replace( /[\s&]/g, ''));
         if (cb.property("checked")) {
 					activatedGenres.push(g);
 				}
