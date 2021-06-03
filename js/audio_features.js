@@ -141,7 +141,7 @@ function createAudioChart(data) {
     .on("end", function() {
       if(!d3.event.selection) {
         // reset brush
-        charts[0].showOnly(contextXScale.domain())
+        chart.showOnly(contextXScale.domain())
       }
     });
 
@@ -169,7 +169,7 @@ function createAudioChart(data) {
   // brush handler. Get time-range from a brush and pass it to the charts.
   function onBrush() {
     var b = d3.event.selection === null ? contextXScale.domain() : d3.event.selection.map(contextXScale.invert);
-    charts[0].showOnly(b);
+    chart.showOnly(b);
   }
 
 }
