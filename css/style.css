@@ -50,12 +50,12 @@ p {
   letter-spacing: 5px;
 }
 
-#info_circle {
+.infoFeatures {
   color: #1E90FF;
   pointer-events: all;
 }
 
-#info_circle:hover {
+.infoFeatures:hover {
   color: #1E70FF;
 }
 

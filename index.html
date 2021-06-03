@@ -58,7 +58,7 @@
     The songs are playable using the Spotify play <a href="#play">button</a>.</p>
   <!-- Initialize a select button -->
   <select id="selectButton"></select>
-  <i id="info_circle" class="fa fa-info-circle"></i>
+  <i id="info_circle" class="fa fa-info-circle infoFeatures"></i>
   <p><br></p>
   <script type="text/javascript" src='js/tracks_popularity.js'></script>
   <p><br></p>
@@ -94,12 +94,11 @@
 <div class="container-fluid bg-white text-center" id="viz3">
   <h3 class="margin">Audio Features of Genres per Year</h3>
 
+  <select id="selectFeature"></select>
+  <i id="info_circle_af" class="fa fa-info-circle infoFeatures"></i>
+  <br /><br />
   <div class="row">
-    <select class="col-sm-12" id="selectFeature"></select>
-  </div>
-  <br />
-  <div class="row">
-    <div id="checkbox-af" class="btn-group-toggle" data-toggle="buttons">
+    <div id="checkbox-af" class="btn-group-toggle col-sm-12" data-toggle="buttons">
     </div>
   </div>
 </div>

@@ -129,7 +129,7 @@ function create_chart( data ){
   }
 
   // add info to info circle icon
-  d3.select("#info_circle")
+  d3.selectAll(".infoFeatures")
     .on('mouseover', info_mouseover)
     .on('mousemove', info_mousemove)
     .on('mouseleave', info_mouseleave);
