@@ -8,7 +8,7 @@ function createAudioChart(data) {
 
   const features = Object.keys(data);
   const genres = Object.keys(data[features[0]]);
-  const startingGenres = ['all', 'rock']
+  const startingGenres = ['all']
 
   // Transform data points to a list
   for (let i in data) {
