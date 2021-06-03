@@ -6,14 +6,20 @@ d3.json(audioFeaturesDataPath, createAudioChart);
 
 function createAudioChart(data) {
 
-  data = data['all']['danceability']; // TMP
+  //data = data['all']['danceability']; // TMP
+  data = data['all']; // TMP
+  const features = Object.keys(data); // TMP
+
   // Transform data points to a list
-  data = Object.entries(data).map(function(d) {
-    return {
-      x: new Date(d[0], 0, 1),  // Transform to Date object
-      y: d[1] * 100  // Map 0-1 to 0-100
-    }
-  });
+  for (let feature in data) {
+    data[feature] = Object.entries(data[feature]).map(function(d) {
+      return {
+        x: new Date(d[0], 0, 1),  // Transform to Date object
+        y: d[1] * 100  // Map 0-1 to 0-100
+      };
+    })
+  }
+
   //const genres = Object.keys(data);
   //const features = Object.keys(data.all);
 
@@ -35,6 +41,25 @@ function createAudioChart(data) {
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom);
 
+  // add categories to select button
+  const selectFeature = d3.select("#selectFeature")
+  selectFeature.selectAll('myOptions')
+   	.data(features)
+    .enter()
+  	.append('option')
+    .text(function (d) { return d.charAt(0).toUpperCase() + d.slice(1); })
+    .attr("value", function (d) { return d; })
+
+  const initialFeature = selectFeature.property("value");
+
+  // when the button is changed, run the updateChart function
+  selectFeature.on("change", function(d) {
+      // recover the option that has been chosen
+      var selectedOption = d3.select(this).property("value")
+      // run the updateChart function with this selected option
+      charts[0].update(selectedOption);
+  })
+
   let charts = [];
   charts.push(new AudioChart({
     data: data,
@@ -50,6 +75,7 @@ function createAudioChart(data) {
     // groups: groups,
     // group_color: group_color,
     // genres: genres
+    feature: initialFeature
   }));
 
   // create a context for a brush
@@ -109,7 +135,7 @@ function createAudioChart(data) {
 
 class AudioChart {
   constructor(options) {
-    this.chartData = options.data;
+    this.allData = options.data;
     this.width = options.width;
     this.height = options.height;
     this.minDataPoint = options.minDataPoint;
@@ -123,8 +149,9 @@ class AudioChart {
     // this.group_color = options.group_color;
     // this.genres = options.genres;
     // this.num_data = this.chartData.length;
+    this.feature = options.feature;
 
-    console.log(this.chartData)
+    this.chartData = this.allData[this.feature];
 
     // Associate xScale with time
     this.xScale = d3.scaleTime()
@@ -187,6 +214,16 @@ class AudioChart {
     this.xScale.domain(b);
     this.chartContainer.select("path").data([this.chartData]).attr("d", this.line);
     this.chartContainer.select(".x.axis.bottom").call(this.xAxisBottom);
+  }
+
+  update(selectedGroup) {
+    this.feature = selectedGroup;
+    this.chartData = this.allData[this.feature];
+    this.chartContainer.select("path")
+      .data([this.chartData])
+      .transition()
+      .duration(1000)
+      .attr("d", this.line);
   }
 
 }

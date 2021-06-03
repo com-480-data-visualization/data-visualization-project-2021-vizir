@@ -58,12 +58,12 @@
   <select id="selectButton"></select>
   <i id="info_circle" class="fa fa-info-circle"></i>
   <p><br></p>
-  <script type="text/javascript" src='js/tracks_popularity.js'></script>
+  <!--<script type="text/javascript" src='js/tracks_popularity.js'></script>-->
   <p><br></p>
   <p>
     Listen to the most popular songs from 1923 to 2021 while enjoying the visualizations!
   </p>
-  <iframe id="play" src="https://open.spotify.com/embed/playlist/4jHDjaezKKPJm2xAxytok4" width="400" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+  <!--<iframe id="play" src="https://open.spotify.com/embed/playlist/4jHDjaezKKPJm2xAxytok4" width="400" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>-->
 </div>
 
 <!-- Visualization 2 -->
@@ -94,22 +94,6 @@
 
   <div class="row">
     <div class="col-sm-12">
-      <form id="featureForm" class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-secondary active">
-          <input type="radio" name="featureSelect" value="danceability" checked>Danceability
-        </label>
-        <label class="btn btn-secondary">
-          <input type="radio" name="featureSelect" value="energy">Energy
-        </label>
-        <label class="btn btn-secondary">
-          <input type="radio" name="featureSelect" value="speechiness">Speechiness
-        </label>
-      </form>
-    </div>
-  </div>
-  <br>
-  <div class="row">
-    <div class="col-sm-12">
       <form id="genreForm" class="btn-group btn-group-toggle" data-toggle="buttons">
         <label class="btn btn-secondary active">
           <input type="checkbox" name="genreSelect" value="all" checked>All
@@ -123,6 +107,8 @@
       </form>
     </div>
   </div>
+
+  <select id="selectFeature"></select>
 </div>
 
 
