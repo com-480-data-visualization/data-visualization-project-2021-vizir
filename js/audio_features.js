@@ -6,16 +6,9 @@ d3.json(audioFeaturesDataPath, createAudioChart);
 
 function createAudioChart(data) {
 
-  //data = data['all']['danceability']; // TMP
-  //data = data['all']; // TMP
-  //const features = Object.keys(data); // TMP
-
   const features = Object.keys(data);
   const genres = Object.keys(data[features[0]]);
   const startingGenres = ['all', 'rock']
-
-  //console.log(features)
-  //console.log(genres)
 
   // Transform data points to a list
   for (let i in data) {
@@ -58,12 +51,11 @@ function createAudioChart(data) {
 
   const initialFeature = selectFeature.property("value");
 
-  // when the button is changed, run the updateChart function
+  // When the selection changes, run the updateFeature function
   selectFeature.on("change", function(d) {
       // recover the option that has been chosen
-      var selectedOption = d3.select(this).property("value")
-      // run the updateChart function with this selected option
-      charts[0].updateFeature(selectedOption);
+      const selectedOption = d3.select(this).property("value");
+      chart.updateFeature(selectedOption);
   })
 
   // Buttons for selecting genres
@@ -104,33 +96,26 @@ function createAudioChart(data) {
 					activatedGenres.push(g);
 				}
       })
-      charts[0].updateGenre(activatedGenres);
+      chart.updateGenre(activatedGenres);
    });
 
-  let charts = [];
-  charts.push(new AudioChart({
+  const chart = new AudioChart({
     data: data,
-    id: 0,
-    // name: "",
     width: width,
     height: height,
     minDataPoint: minDataPoint,
     maxDataPoint: maxDataPoint,
     svg: svg,
     margin: margin,
-    // showBottomAxis: true,
-    // groups: groups,
-    // group_color: group_color,
-    // genres: genres
     feature: initialFeature,
     genres: startingGenres,
     allGenres: genres
-  }));
+  });
 
   // create a context for a brush
 	const contextXScale = d3.scaleTime()
 		.range([0, contextWidth])
-		.domain(charts[0].xScale.domain())
+		.domain(chart.xScale.domain())
 
 	const contextAxis = d3.axisBottom(contextXScale)
     .ticks(20)
@@ -154,7 +139,7 @@ function createAudioChart(data) {
 		.on("brush", onBrush)
     .on("end", function() {
       if(!d3.event.selection) {
-        /* reset brush */
+        // reset brush
         charts[0].showOnly(contextXScale.domain())
       }
     });
@@ -197,19 +182,12 @@ class AudioChart {
     this.maxDataPoint = options.maxDataPoint;
     this.svg = options.svg;
     this.id = options.id;
-    // this.name = options.name;
     this.margin = options.margin;
-    // this.showBottomAxis = options.showBottomAxis;
-    // this.groups = options.groups;
-    // this.group_color = options.group_color;
-    // this.genres = options.genres;
-    // this.num_data = this.chartData.length;
     this.feature = options.feature;
     this.genres = options.genres;
     this.allGenres = options.allGenres;
 
     this.chartData = this.allData[this.feature];
-    //this.chartData = this.chartData['all']; //TMP
 
     // Associate xScale with time
     this.xScale = d3.scaleTime()
@@ -228,7 +206,6 @@ class AudioChart {
 
     // Add the chart to the HTML page
     this.chartContainer = this.svg.append("g")
-      //.attr('class', this.name.toLowerCase())
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
     // Create the lines
@@ -279,6 +256,7 @@ class AudioChart {
   }
 
   showOnly(b) {
+    // Update chart after using the brush
     this.xScale.domain(b);
     const that = this;
     this.allGenres.forEach(function(genre, i) {
