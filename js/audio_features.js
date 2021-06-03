@@ -61,13 +61,18 @@ function createAudioChart(data) {
   // Buttons for selecting genres
   toggle =  d3.select("#checkbox-af")
 
+  // Color palette
+  var colors = d3.scaleOrdinal()
+                .domain(genres)
+                .range(d3.schemeCategory10.concat(["#a8327f", "#a89e32", "#3283a8", "#a83232"]));
+
   // Add classes for the colors
-  /*genres.forEach(g => {
+  genres.forEach(g => {
       var style = document.createElement('style');
           style.type = 'text/css';
-          style.innerHTML = '#btn-' + g.replace( /\s/g, '') + '.active' + ' { background-color: ' + color(g)+ '; }';
+          style.innerHTML = '#btn-af-' + g.replace( /\s/g, '') + '.active' + ' { background-color: ' + colors(g)+ '; }';
           document.getElementsByTagName('head')[0].appendChild(style);
-  });*/
+  });
 
   toggles = toggle.selectAll("div")
     .data(genres)
@@ -110,7 +115,8 @@ function createAudioChart(data) {
     margin: margin,
     feature: initialFeature,
     genres: startingGenres,
-    allGenres: genres
+    allGenres: genres,
+    colors: colors
   });
 
   // create a context for a brush
@@ -187,6 +193,7 @@ class AudioChart {
     this.feature = options.feature;
     this.genres = options.genres;
     this.allGenres = options.allGenres;
+    this.colors = options.colors;
 
     this.chartData = this.allData[this.feature];
 
@@ -212,7 +219,8 @@ class AudioChart {
     // Create the lines
     this.lines = [];
     this.paths = [];
-    for (const genre of this.allGenres) {
+    const that = this;
+    this.allGenres.forEach(function(genre, i) {
       const line = d3.line()
         .x(function(d) {
           return xS(d.x);
@@ -222,19 +230,19 @@ class AudioChart {
         })
         .curve(d3.curveBasis);
 
-      const opacity = this.genres.includes(genre) ? 1 : 0;
-      const path = this.chartContainer.append("path")
-        .data([this.chartData[genre]])
+      const opacity = that.genres.includes(genre) ? 1 : 0;
+      const path = that.chartContainer.append("path")
+        .data([that.chartData[genre]])
         .attr("fill", "none")
-        .attr("stroke", "black")
+        .attr("stroke", that.colors(genre))
         .attr("stroke-width", 2)
         .attr("class", "chart")
         .attr("d", line)
         .style("opacity", opacity);
 
-      this.lines.push(line);
-      this.paths.push(path);
-    }
+      that.lines.push(line);
+      that.paths.push(path);
+    })
 
     // Add x axis
     this.xAxisBottom = d3.axisBottom(xS);
