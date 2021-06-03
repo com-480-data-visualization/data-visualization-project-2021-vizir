@@ -196,7 +196,13 @@ function create_chart( data ){
 			[contextXScale.range()[0], 5],
 			[contextXScale.range()[1], contextHeight + 25]
 		])
-		.on("brush", onBrush);
+		.on("brush", onBrush)
+    .on("end", function() {
+      if(!d3.event.selection) {
+        /* reset brush */
+        charts[0].showOnly(contextXScale.domain())
+      }
+    });
 
   let context = svg.append("g")
     .attr("class", "context")
