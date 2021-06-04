@@ -9,7 +9,7 @@ function createAudioChart(data) {
   const features = Object.keys(data);
   const genres = Object.keys(data[features[0]]);
   const startingGenres = ['all'];
-  const colors = GENRES_COLOR2;
+  const colors = GENRES_COLOR;
   colors["all"] = "#000000";
 
   // Transform data points to a list

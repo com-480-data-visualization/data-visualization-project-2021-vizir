@@ -19,90 +19,40 @@ var svg1 = d3.select("#viz2")
              .attr("preserveAspectRatio", "xMinYMin meet")
              .attr("viewBox", "0 0 " + (width2 + margin2.left + margin2.right + " " +  (height2 + margin2.top + margin2.bottom)))
              .attr("class", "svg-content-responsive mt-5");
-             //.attr("width", width2 + margin2.left + margin2.right)
-             //.attr("height", height2 + margin2.top + margin2.bottom);
-            
-let GENRES_COLORS = ["#961c0a", "#2b5688", "#991c45", "#4f35cd","#056e70",
-                     "#824475", "#1c4a06", "#98065b", "#71470f", "#14675a",
-                     "#373b3b", "#6d3f46", "#3c27f0", "#176234"];
                     
-let GENRES_COLOR2 = {"rock" : "#4d000a",            // brown
+let GENRES_COLOR =  {"rock" : "#4d000a",            // brown
                      "soul" : "#4287f5",            // blue
-                     "folk" : "#f542a7",   // pink
-                     "blues" : "#1aab1e",       // green
+                     "folk" : "#f542a7",            // pink
+                     "blues" : "#1aab1e",           // green
                      "latin" : "#e3d327",           // yellow
                      "classical" : "#853978",       // light violet
                      "adult standards" : "#e38e27", // orange
                      "pop" : "#27e0e3",             // light blue
-                     "jazz" : "#e32727",    // red
-                     "r&b" : "#6e5f4e",    // grayish
+                     "jazz" : "#e32727",            // red
+                     "r&b" : "#6e5f4e",             // grayish
                      "hip hop" : "#000759",         // dark blue
                      "rap" : "#999999",             // light gray
-                     "soul" : "#9c0acc",     // violet
+                     "soul" : "#9c0acc",            // violet
                      "hard rock" : "#9ccc0a"};      // light green
-
-console.log(GENRES_COLOR2["rock"])
 
 function create_chart(data) {
 
     let years = data.map(d => d["year"]);
     let genres = data.columns.slice(1);
     let starting_genres = ["latin", "classical"]
-
-    starting_data = filter_genres(data, starting_genres)
-    //starting_data = get_percentage(starting_data)
-
-    var max = get_max(starting_data)
+    let starting_data = filter_genres(data, starting_genres)
 
     // years/decades scale
     x = d3.scaleBand()
-            .domain(years)
-            .range([0,  width2])
-            
+          .domain(years)
+          .range([0,  width2])
+
+    max = get_max(data)
+     
     // popularity scale
     y = d3.scaleLinear()
-               .domain([0, max]) 
-               .range([height2, 0])
-
-    // Color palette
-    var color = d3.scaleOrdinal()
-                  .domain(genres)
-                  .range(d3.schemeCategory10.concat(["#a8327f", "#a89e32", "#3283a8", "#a83232"]));
-
-    var stackedData = d3.stack().keys(starting_genres)(starting_data)
-    
-    // CHART
-    var curr_genre = ""
-
-    bars = svg1.append("g")
-        .attr("transform", "translate(" + margin2.left + ","  + margin2.top + ")")
-        .selectAll("g")
-        .data(stackedData)
-        .enter().append("g")
-        .attr("fill", function(d, i) { 
-            curr_genre = d.key
-            return GENRES_COLOR2[d.key]; })
-        .selectAll("rect")  
-        .data(function(d) { return d; })
-        .enter().append("rect")
-        .attr("class", function(d) {return "bar-"+curr_genre.replace( /\s/g, '')})
-        .attr("x", function(d) { return x(d.data.year) + 0.1*x.bandwidth(); })
-        .attr("y", height2)
-        .attr("width", x.bandwidth()*0.8)
-        .attr("height", 0)
-
-    bars.transition().duration(1000)
-        .attr("y", function(d) { return y(d[1]); })
-        .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-
-    bars.on("mouseover", function() { tooltip.style("display", null); })
-        .on("mouseout", function() { tooltip.style("display", "none"); })
-        .on("mousemove", function(d) {
-            var xPosition = d3.mouse(this)[0] - 5;
-            var yPosition = d3.mouse(this)[1] - 5;
-            tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-            tooltip.select("text").text("No of tracks: " + ((d[1]-d[0]).toFixed(2)).toString()); // could add genre
-        });
+          .domain([0, max])
+          .range([height2, 0])
 
     // AXES
     let axis_height = height2 + 20;
@@ -123,12 +73,14 @@ function create_chart(data) {
         .attr("fill", "white")
         .text("Number of tracks")
         .attr("font-size", "14")
-      
+    
+    // CHART
+    update_chart(starting_data, x, y, yaxis, starting_genres)
 
     // TOOLTIP
     var tooltip = svg1.append("g")
-                     .attr("class", "tooltip_genres")
-                     .style("display", "none");
+                      .attr("class", "tooltip_genres")
+                      .style("display", "none");
       
     tooltip.append("rect")
             .attr("width", 120)
@@ -143,20 +95,21 @@ function create_chart(data) {
             .attr("font-size", "12px")
             .attr("font-weight", "bold");
 
-    // TOGGLE
-    toggle_div =  d3.select("#toggle_viz2")
-                    
+    // TOGGLES
+    toggle_div =  d3.select("#toggle_viz2")           
 
-    // Add classes for the colors    
+    // Add classes for the colors   
+    // https://stackoverflow.com/questions/1720320/how-to-dynamically-create-css-class-in-javascript-and-apply 
     genres.forEach(g => {
         var genre = g;
         if (genre === "r&b") { genre = "randb"} // the & in r&b creates problems with css/html
         var style = document.createElement('style');
             style.type = 'text/css';
-            style.innerHTML = '#btn-' + genre.replace( /\s/g, '') + '.active' + ' { background-color: ' + GENRES_COLOR2[g] + '; }';
+            style.innerHTML = '#btn-' + genre.replace( /\s/g, '') + '.active' + ' { background-color: ' + GENRES_COLOR[g] + '; }';
             document.getElementsByTagName('head')[0].appendChild(style);
     });
 
+    // https://www.d3-graph-gallery.com/graph/interactivity_button.html
     toggles = toggle_div.selectAll("div")
                    .data(genres) //reverse to have the same order as displayed on the viz
                    .enter()
@@ -187,7 +140,7 @@ function create_chart(data) {
                         if (genre === "r&b") { genre = "randb"}
                        return "genre-toggle-" + genre.replace( /\s/g, ''); })
 
-//UPDATE DATA
+    //ADD UPDATE TO EVERY TOGGLE BUTTONS
     genres.reverse().forEach(g => {
         var genre = g;
         if (genre === "r&b") { genre = "randb"}
@@ -203,100 +156,84 @@ function create_chart(data) {
                 }
             });
 
-            let new_data = filter_genres(data, new_genres)
-            //new_data = get_percentage(new_data)
-
-            max = get_max(new_data)
-
-            y.domain([0, max])
-
-            yaxis.transition().duration(1000)
-                 .call(d3.axisLeft(y));
-
-            let new_stacked_data = d3.stack().keys(new_genres)(new_data)
-
+            // remove previous bars
             svg1.selectAll("rect")
                 .transition().duration(1000)
                 .attr("y", height2)
                 .attr("height", 0)
                 .remove()
-                
-            var curr_genre = ""
-            bars = svg1.append("g")
-                        .attr("transform", "translate(" + margin2.left + ","  + margin2.top + ")")
-                        .selectAll("g")
-                        .data(new_stacked_data)
-                        .enter().append("g")
-                        .attr("fill", function(d, i) { 
-                            curr_genre = d.key
-                            return GENRES_COLOR2[d.key]; })
-                        .selectAll("rect")  
-                        .data(function(d) { return d; })
-                        .enter().append("rect")
-                        .attr("class", function(d) {return "bar-" + curr_genre.replace( /\s/g, '')})
-                        .attr("x", function(d) { return x(d.data.year) + 0.1*x.bandwidth(); })
-                        .attr("y", height2)
-                        .attr("width", x.bandwidth()*0.8)
-                        .attr("height", 0)
-        
-            bars.transition().delay(1000).duration(1000)
-                .attr("y", function(d) { return y(d[1]); })
-                .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-        
-            bars.on("mouseover", function() { tooltip.style("display", null); })
-                .on("mouseout", function() { tooltip.style("display", "none"); })
-                .on("mousemove", function(d) {
-                    var xPosition = d3.mouse(this)[0] - 5;
-                    var yPosition = d3.mouse(this)[1] - 5;
-                    tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-                    tooltip.select("text").text("No of tracks: " + ((d[1]-d[0]).toFixed(2)).toString()); // could add genre
-                });
 
-            // TOOLTIP
-            var tooltip = svg1.append("g")
-                            .attr("class", "tooltip_genres")
-                            .style("display", "none");
+            let new_data = filter_genres(data, new_genres)
 
-            tooltip.append("rect")
-                    .attr("width", 120)
-                    .attr("height", 20)
-                    .attr("fill", "white")
-                    .style("opacity", 0.5);
+            // Add new bars
+            update_chart(new_data, x, y, yaxis, new_genres)
 
-            tooltip.append("text")
-                    .attr("x", 60)
-                    .attr("dy", "1.2em")
-                    .style("text-anchor", "middle")
-                    .attr("font-size", "12px")
-                    .attr("font-weight", "bold");
           });
     });
-}
+};
 
-function get_percentage(data) {
+function update_chart(data, x, y, yaxis, genres) {
+    // Function that allows to draw and upade the stacked bar chart
+    // partly inspired by : https://www.d3-graph-gallery.com/graph/barplot_stacked_basicWide.html
 
-    let genres = data.columns;
+    max = get_max(data)
 
-    for(i = 0; i < data.length; ++i) {
-        // Get max
-        var sum = 0
-        genres.forEach(g => {
-            sum += data[i][g];
+    y.domain([0, max])
+
+    yaxis.transition().duration(1000)
+         .call(d3.axisLeft(y));
+
+    let stacked_data = d3.stack().keys(genres)(data)
+        
+    var curr_genre = ""
+    bars = svg1.append("g")
+                .attr("transform", "translate(" + margin2.left + ","  + margin2.top + ")")
+                .selectAll("g")
+                .data(stacked_data)
+                .enter().append("g")
+                .attr("fill", function(d, i) { 
+                    curr_genre = d.key
+                    return GENRES_COLOR[d.key]; })
+                .selectAll("rect")  
+                .data(function(d) { return d; })
+                .enter().append("rect")
+                .attr("class", function(d) {return "bar-" + curr_genre.replace( /\s/g, '')})
+                .attr("x", function(d) { return x(d.data.year) + 0.1*x.bandwidth(); })
+                .attr("y", height2)
+                .attr("width", x.bandwidth()*0.8)
+                .attr("height", 0)
+
+    bars.transition().delay(1000).duration(1000)
+        .attr("y", function(d) { return y(d[1]); })
+        .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+
+    bars.on("mouseover", function() { tooltip.style("display", null); })
+        .on("mouseout", function() { tooltip.style("display", "none"); })
+        .on("mousemove", function(d) {
+            var xPosition = d3.mouse(this)[0] - 5;
+            var yPosition = d3.mouse(this)[1] - 5;
+            tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+            tooltip.select("text").text("No of tracks: " + ((d[1]-d[0]).toFixed(2)).toString()); // could add genre
         });
 
-        // Set sum to 1 if sum == 0 to ensure no division by 0
-        if(sum === 0) { 
-            sum = 1;
-        };
+    // TOOLTIP
+    var tooltip = svg1.append("g")
+                    .attr("class", "tooltip_genres")
+                    .style("display", "none");
 
-        //divide per max to get percentage
-        genres.forEach(g => {
-            data[i][g] = 100*data[i][g] / sum
-        });
-    }
+    tooltip.append("rect")
+           .attr("width", 120)
+           .attr("height", 20)
+           .attr("fill", "white")
+           .style("opacity", 0.5);
 
-    return data
-}
+    tooltip.append("text")
+           .attr("x", 60)
+           .attr("dy", "1.2em")
+           .style("text-anchor", "middle")
+           .attr("font-size", "12px")
+           .attr("font-weight", "bold");
+};
 
 function filter_genres(data, genres) {
     var new_data = JSON.parse(JSON.stringify(data)) //copy data
@@ -317,10 +254,10 @@ function filter_genres(data, genres) {
     new_data.columns = genres
 
     return new_data
-}
+};
 
 function get_max(data) {
-
+    // Function to get the maximum value for the sum in a year
     var max = 0
     for(i = 0; i < data.length; ++i) {
         var curr_max = 0
@@ -335,6 +272,6 @@ function get_max(data) {
     }
 
     return max;
-}
+};
 
 d3.csv("data/genres_decades_count.csv", create_chart);
