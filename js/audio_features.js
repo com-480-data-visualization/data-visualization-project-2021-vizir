@@ -8,7 +8,9 @@ function createAudioChart(data) {
 
   const features = Object.keys(data);
   const genres = Object.keys(data[features[0]]);
-  const startingGenres = ['all']
+  const startingGenres = ['all'];
+  const colors = GENRES_COLOR2;
+  colors["all"] = "#000000";
 
   // Transform data points to a list
   for (let i in data) {
@@ -61,16 +63,11 @@ function createAudioChart(data) {
   // Buttons for selecting genres
   toggle =  d3.select("#checkbox-af")
 
-  // Color palette
-  var colors = d3.scaleOrdinal()
-                .domain(genres)
-                .range(d3.schemeCategory10.concat(["#a8327f", "#a89e32", "#3283a8", "#a83232"]));
-
   // Add classes for the colors
   genres.forEach(g => {
       var style = document.createElement('style');
           style.type = 'text/css';
-          style.innerHTML = '#btn-af-' + g.replace( /\s/g, '') + '.active' + ' { background-color: ' + colors(g)+ '; }';
+          style.innerHTML = '#btn-af-' + g.replace( /[\s&]/g, '') + '.active' + ' { background-color: ' + colors[g]+ '; }';
           document.getElementsByTagName('head')[0].appendChild(style);
   });
 
@@ -234,7 +231,7 @@ class AudioChart {
       const path = that.chartContainer.append("path")
         .data([that.chartData[genre]])
         .attr("fill", "none")
-        .attr("stroke", that.colors(genre))
+        .attr("stroke", that.colors[genre])
         .attr("stroke-width", 2)
         .attr("class", "chart")
         .attr("d", line)
