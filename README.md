@@ -30,7 +30,7 @@ The final website is available at the following [link](https://com-480-data-visu
 
 The screencast showing and briefly explaining the visualizations in the website can be found at the following link.
 
-The process book can be found here.
+The process book can be found [here](docs/process_book.pdf).
 
 The repository is structured as follows:
 - `notebooks/` contains the exploratory data analysis and the Jupiter notebooks used to pre-process the data for the different visualizations
