@@ -101,5 +101,20 @@ g.popularity path.chart {
 }
 
 #viz2 {
-  height: 800px;
+  height: 50rem;
+  width: 40rem;
+}
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  vertical-align: top;
+  overflow: hidden;
+}
+.svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }

@@ -9,15 +9,18 @@ let height2 = chartDiv2.offsetHeight * 0.85;
 const margin2 = {
     top: 20,
     right: 50,
-    bottom: 150,
+    bottom: 20,
     left: 50
   };
 
 var svg1 = d3.select("#viz2")
+             .classed("svg-container", true)
              .append("svg")
-             .attr("class", "mt-5")
-             .attr("width", width2 + margin2.left + margin2.right)
-             .attr("height", height2 + margin2.top + margin2.bottom);
+             .attr("preserveAspectRatio", "xMinYMin meet")
+             .attr("viewBox", "0 0 " + (width2 + margin2.left + margin2.right + " " +  (height2 + margin2.top + margin2.bottom)))
+             .attr("class", "svg-content-responsive mt-5");
+             //.attr("width", width2 + margin2.left + margin2.right)
+             //.attr("height", height2 + margin2.top + margin2.bottom);
             
 let GENRES_COLORS = ["#961c0a", "#2b5688", "#991c45", "#4f35cd","#056e70",
                      "#824475", "#1c4a06", "#98065b", "#71470f", "#14675a",
@@ -158,7 +161,7 @@ function create_chart(data) {
                    .data(genres) //reverse to have the same order as displayed on the viz
                    .enter()
                    .append("div")
-                   .attr("class", "btn-group-toggle mx-5")
+                   .attr("class", "btn-group-toggle")
                    .attr("data-toggle", "buttons")
                    .append("label")
                    .attr("class", function(d) { return "btn btn-secondary btn-block mb-2" })
