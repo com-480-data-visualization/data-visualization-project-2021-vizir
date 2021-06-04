@@ -213,6 +213,23 @@ class AudioChart {
     this.chartContainer = this.svg.append("g")
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
+    this.tooltip = this.svg.append("g")
+      .attr("class", "tooltip_genres")
+      .style("display", "none");
+
+    this.tooltip.append("rect")
+      .attr("width", 120)
+      .attr("height", 20)
+      .attr("fill", "white")
+      .style("opacity", 0.5);
+
+    this.tooltip.append("text")
+      .attr("x", 60)
+      .attr("dy", "1.2em")
+      .style("text-anchor", "middle")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold");
+
     // Create the lines
     this.lines = [];
     this.paths = [];
@@ -230,12 +247,27 @@ class AudioChart {
       const opacity = that.genres.includes(genre) ? 1 : 0;
       const path = that.chartContainer.append("path")
         .data([that.chartData[genre]])
+        .attr("id", "path-" + genre.replace( /[\s&]/g, ''))
         .attr("fill", "none")
         .attr("stroke", that.colors[genre])
         .attr("stroke-width", 2)
         .attr("class", "chart")
         .attr("d", line)
-        .style("opacity", opacity);
+        .style("opacity", opacity)
+        .on("mouseover", function() {
+          that.tooltip.style("display", null);
+        })
+        .on("mouseout", function() {
+          that.tooltip.style("display", "none");
+        })
+        .on("mousemove", function() {
+          if (d3.select("#path-" + genre.replace( /[\s&]/g, '')).style("opacity") != 0) {
+            const x = d3.mouse(this)[0] - 5;
+            const y = d3.mouse(this)[1] - 5;
+            that.tooltip.attr("transform", "translate(" + x + "," + y + ")");
+            that.tooltip.select("text").text(genre);
+          }
+        });
 
       that.lines.push(line);
       that.paths.push(path);
