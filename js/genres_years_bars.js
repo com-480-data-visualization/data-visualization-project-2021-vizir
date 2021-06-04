@@ -101,7 +101,7 @@ function create_chart(data) {
             var xPosition = d3.mouse(this)[0] - 5;
             var yPosition = d3.mouse(this)[1] - 5;
             tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-            tooltip.select("text").text("Popularity: " + ((d[1]-d[0]).toFixed(2)).toString() + " %"); // could add genre
+            tooltip.select("text").text("No of tracks: " + ((d[1]-d[0]).toFixed(2)).toString()); // could add genre
         });
 
     // AXES
@@ -249,7 +249,7 @@ function create_chart(data) {
                     var xPosition = d3.mouse(this)[0] - 5;
                     var yPosition = d3.mouse(this)[1] - 5;
                     tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-                    tooltip.select("text").text("Popularity: " + ((d[1]-d[0]).toFixed(2)).toString()); // could add genre
+                    tooltip.select("text").text("No of tracks: " + ((d[1]-d[0]).toFixed(2)).toString()); // could add genre
                 });
 
             // TOOLTIP
