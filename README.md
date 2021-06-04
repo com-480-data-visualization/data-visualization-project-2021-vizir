@@ -28,7 +28,7 @@ The website is available at [https://com-480-data-visualization.github.io/data-v
 
 The final website is available at the following [link](https://com-480-data-visualization.github.io/data-visualization-project-2021-vizir/).
 
-The screencast showing and briefly explaining the visualizations in the website can be found at the following link.
+The screencast showing and briefly explaining the visualizations in the website can be found at the following [link](https://youtu.be/_5qzR7W0ct4).
 
 The process book can be found [here](docs/process_book.pdf).
 
